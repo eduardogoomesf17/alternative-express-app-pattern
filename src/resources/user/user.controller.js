@@ -28,7 +28,7 @@ class UserController {
     }
   }
 
-  async getUserById(request, response) {
+  async getUserById(request, response, next) {
     try {
       const userId = request.params.id;
 
@@ -40,7 +40,7 @@ class UserController {
     }
   }
 
-  async getUserByEmail(request, response) {
+  async getUserByEmail(request, response, next) {
     try {
       const userEmail = request.params.email;
 
