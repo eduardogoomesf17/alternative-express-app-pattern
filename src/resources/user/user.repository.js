@@ -8,7 +8,6 @@ class UserRepository {
     try {
       const user = await this.User.create(userBody);
 
-
       return user;
     } catch (error) {
       throw new Error();
