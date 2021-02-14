@@ -1,7 +1,9 @@
+const User = require('./user.model');
+
 class UserRepository {
 
-  constructor(Model) {
-    this.User = new Model();
+  constructor(User) {
+    this.User = new User();
   }
 
   async create(userBody) {

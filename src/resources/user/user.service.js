@@ -1,21 +1,22 @@
 const status = require('http-status');
 
 const InternalError = require('../../errors/');
+// const UserRepository = require('./user.repository')
 
 class UserService {
 
-  constructor(Repository, Model) {
-    this.UserRepository = new Repository(Model);
+  constructor(UserRepository, User) {
+    this.userRepository = new UserRepository(User);
   }
 
   async createUser(userBody) {
-    const userByEmail = await this.UserRepository.getUserByEmail(userBody.email);
+    const userByEmail = await this.userRepository.getUserByEmail(userBody.email);
 
     if(userByEmail) {
       throw new InternalError("E-mail already in use", status.BAD_REQUEST);
     }
 
-    const user = await this.UserRepository.create(userBody);
+    const user = await this.userRepository.create(userBody);
 
     if(!user) {
       throw new InternalError("Fail to create user", status.INTERNAL_SERVER_ERROR);
@@ -26,7 +27,7 @@ class UserService {
 
   async getUserById(userId) {
     try {
-      const user = await this.UserRepository.getOneById(userId);
+      const user = await this.userRepository.getOneById(userId);
 
       if(!user) {
         throw new InternalError("User not found", status.NOT_FOUND);
@@ -40,7 +41,7 @@ class UserService {
 
   async getUsers() {
     try {
-      const users = await this.UserRepository.getAll();
+      const users = await this.userRepository.getAll();
 
       if(users.length <= 0) {
         throw new InternalError("Users not found", status.NOT_FOUND);
@@ -54,7 +55,7 @@ class UserService {
 
   async getUserByEmail(userEmail) {
     try {
-      const user = await this.UserRepository.getUserByEmail(userEmail);
+      const user = await this.userRepository.getUserByEmail(userEmail);
 
       if(!user) {
         throw new InternalError("Users not found", status.NOT_FOUND);

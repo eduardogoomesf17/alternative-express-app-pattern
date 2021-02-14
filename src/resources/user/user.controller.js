@@ -1,16 +1,18 @@
 const status = require('http-status');
 
-class UserController {
+const UserService = require('./user.service');
+const UserRepository = require('./user.repository')
+const User = require('./user.model');
 
-  constructor(UserService, UserRepository, User) {
-    this.userService = new UserService(UserRepository, User);
-  }
+let userService = new UserService(UserRepository, User);
+
+class UserController {
 
   async createUser(request, response, next) {
     try {
       const userData = request.body;
 
-      const user = await this.userService.createUser(userData);
+      const user = await userService.createUser(userData);
 
       return response.status(status.OK).json({ result: user });
     } catch (error) {
@@ -20,7 +22,7 @@ class UserController {
 
   async getUsers(request, response, next) {
     try {
-      const users = await this.userService.getUsers();
+      const users = await userService.getUsers();
       
       return response.status(status.OK).json({ result: users, message: status['200_MESSAGE'] });
     } catch (error) { 
@@ -32,7 +34,7 @@ class UserController {
     try {
       const userId = request.params.id;
 
-      const user = await this.userService.getUserById(userId);
+      const user = await userService.getUserById(userId);
       
       return response.status(status.OK).json({ result: user, message: status['200_MESSAGE'] });
     } catch (error) {
@@ -44,7 +46,7 @@ class UserController {
     try {
       const userEmail = request.params.email;
 
-      const user = await this.userService.getUserByEmail(userEmail);
+      const user = await userService.getUserByEmail(userEmail);
       
       return response.status(status.OK).json({ result: user, message: status['200_MESSAGE'] });
     } catch (error) {
