@@ -1,10 +1,11 @@
-const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const status = require('http-status');
 
+const Logger = require('./logger');
 const config = require('../config');
 const routes = require('../api');
+const InternalError = require('../errors');
 
  /**
   * Load app config
@@ -36,6 +37,25 @@ const expressConfigLoader = (app) => {
 
   // Load API Routes
   app.use(config.api.prefix, routes());
+
+  // Error Handler
+  app.use((err, request, response, next) => {
+    if(err instanceof InternalError) {
+      Logger.error(err.errorMessage);
+
+      return response
+      .status(err.statusCode)
+      .json({ 
+        result: err.errorMessage, 
+        message: status[`${err.statusCode}_MESSAGE`] 
+      });
+    }
+
+    Logger.error(err.message);
+    Logger.error(err.stack);
+
+    return response.status(status.INTERNAL_SERVER_ERROR).json({ message: status['500_MESSAGE'] });
+  });
 
 }
 
