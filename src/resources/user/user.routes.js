@@ -12,13 +12,13 @@ const userService = new UserService(UserRepository, User);
 module.exports = (app) => {
   app.use('/users', routes);
   
-  routes.get('/', async (request, response) => {
+  routes.get('/', async (request, response, next) => {
     try {
       const users = await userService.getUsers();
       
       return response.status(status.OK).json({ result: users, message: status['200_MESSAGE'] });
-    } catch (error) {
-      return response.status(status.INTERNAL_SERVER_ERROR).json({ message: status['500_MESSAGE'] })
+    } catch (error) { 
+      return next(error);
     }
   });
 
@@ -30,7 +30,7 @@ module.exports = (app) => {
       
       return response.status(status.OK).json({ result: user, message: status['200_MESSAGE'] });
     } catch (error) {
-      return response.status(status.INTERNAL_SERVER_ERROR).json({ message: status['500_MESSAGE'] })
+      return next(error);
     }
   });
 
@@ -42,11 +42,11 @@ module.exports = (app) => {
       
       return response.status(status.OK).json({ result: user, message: status['200_MESSAGE'] });
     } catch (error) {
-      return response.status(status.INTERNAL_SERVER_ERROR).json({ message: status['500_MESSAGE'] })
+      return next(error);
     }
   });
 
-  routes.post('/', async (request, response) => {
+  routes.post('/', async (request, response, next) => {
     try {
       const userData = request.body;
 
@@ -54,7 +54,7 @@ module.exports = (app) => {
 
       return response.status(status.OK).json({ result: user });
     } catch (error) {
-      return response.status(status.INTERNAL_SERVER_ERROR).json({ message: status['500_MESSAGE'] });
+      return next(error);
     }
   })
   

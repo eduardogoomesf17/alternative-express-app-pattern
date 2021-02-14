@@ -9,23 +9,19 @@ class UserService {
   }
 
   async createUser(userBody) {
-    try {
-      const userByEmail = await this.UserRepository.getUserByEmail(userBody.email);
+    const userByEmail = await this.UserRepository.getUserByEmail(userBody.email);
 
-      if(userByEmail) {
-        throw new InternalError("E-mail already in use", status.BAD_REQUEST);
-      }
-
-      const user = await this.UserRepository.create(userBody);
-
-      if(!user) {
-        throw new InternalError("Fail to create user", status.INTERNAL_SERVER_ERROR);
-      }
-
-      return user;
-    } catch (error) {
-      throw new Error(error);
+    if(userByEmail) {
+      throw new InternalError("E-mail already in use", status.BAD_REQUEST);
     }
+
+    const user = await this.UserRepository.create(userBody);
+
+    if(!user) {
+      throw new InternalError("Fail to create user", status.INTERNAL_SERVER_ERROR);
+    }
+
+    return user;
   }
 
   async getUserById(userId) {
