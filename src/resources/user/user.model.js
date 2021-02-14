@@ -38,13 +38,11 @@ class User {
 
   constructor() {}
 
-  async create ({ name, email, password }) {
+  async create (userBody) {
     try {
       const user = { 
         id: uuid(),       
-        name, 
-        email, 
-        password,
+        ...userBody,
         createdAt: Date.now()
       };
       
