@@ -20,7 +20,7 @@ module.exports = {
     prefix: "/api"
   },
 
-  // 
+  // Environment 
   app_environment: process.env.ENVIRONMENT || "DEVELOPMENT"
 
 }

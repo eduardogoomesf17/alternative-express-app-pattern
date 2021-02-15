@@ -1,7 +1,8 @@
 const status = require('http-status');
 
 const InternalError = require('../../errors/');
-// const UserRepository = require('./user.repository')
+const eventEmitter = require('../../events');
+const { eventNames } = require('../../utils/constants');
 
 class UserService {
 
@@ -21,6 +22,8 @@ class UserService {
     if(!user) {
       throw new InternalError("Fail to create user", status.INTERNAL_SERVER_ERROR);
     }
+
+    eventEmitter.emit(eventNames.mailEvents.user.signUp, { mail: userBody.email });
 
     return user;
   }
