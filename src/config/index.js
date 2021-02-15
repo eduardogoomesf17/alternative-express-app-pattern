@@ -21,6 +21,9 @@ module.exports = {
   },
 
   // Environment 
-  app_environment: process.env.ENVIRONMENT || "DEVELOPMENT"
+  app_environment: process.env.ENVIRONMENT || "DEVELOPMENT",
+
+  // SALT HASH
+  salt_hash: process.env.SALT_HASH
 
 }
