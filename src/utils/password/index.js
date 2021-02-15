@@ -1,8 +1,8 @@
 const bcrypt = require('bcryptjs');
 
-const generatePasswordHash = async (password, salt) => {
+const generatePasswordHash = async (password) => {
   try {
-    const passwordHash = await bcrypt.hash(password, salt); 
+    const passwordHash = await bcrypt.hash(password, 8); 
 
     return passwordHash;
   } catch (error) {

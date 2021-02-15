@@ -3,6 +3,7 @@ const status = require('http-status');
 const InternalError = require('../../errors/');
 const eventEmitter = require('../../events');
 const { eventNames } = require('../../utils/constants');
+const { generatePasswordHash } = require('../../utils/password');
 
 class UserService {
 
@@ -16,6 +17,8 @@ class UserService {
     if(userByEmail) {
       throw new InternalError("E-mail already in use", status.BAD_REQUEST);
     }
+
+    userBody.password = await generatePasswordHash(userBody.password);
 
     const user = await this.userRepository.create(userBody);
 
