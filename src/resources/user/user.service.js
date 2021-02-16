@@ -4,6 +4,8 @@ const InternalError = require('../../errors/');
 const eventEmitter = require('../../events');
 const { eventNames } = require('../../utils/constants');
 const { generatePasswordHash, comparePassword } = require('../../utils/password');
+const { generateAuthToken } = require('../../utils/authToken');
+const { userFormatFunctions } = require('../../utils/formatting/index');
 
 class UserService {
 
@@ -28,7 +30,9 @@ class UserService {
 
     eventEmitter.emit(eventNames.mailEvents.user.signUp, { mail: userBody.email });
 
-    return user;
+    const formattedUserData = userFormatFunctions.formatUserData(user);
+
+    return formattedUserData;
   }
 
   getUserById(userId) {
@@ -38,7 +42,9 @@ class UserService {
       throw new InternalError("User not found", status.NOT_FOUND);
     }
 
-    return user;
+    const formattedUserData = userFormatFunctions.formatUserData(user);
+
+    return formattedUserData;
   }
 
   getUsers() {
@@ -48,7 +54,9 @@ class UserService {
       throw new InternalError("Users not found", status.NOT_FOUND);
     } 
 
-    return users;
+    const formattedUsers = userFormatFunctions.formatUsersData(users);
+
+    return formattedUsers;
   }
 
   getUserByEmail(userEmail) {
@@ -58,7 +66,9 @@ class UserService {
       throw new InternalError("User not found", status.NOT_FOUND);
     }
 
-    return user;
+    const formattedUserData = userFormatFunctions.formatUserData(user);
+
+    return formattedUserData;
   }
 
   async updateUser(userId, userData) {
@@ -112,7 +122,18 @@ class UserService {
       throw new InternalError(invalidUserMessage, status.BAD_REQUEST);
     }
 
-    return user;
+    const formattedUserData = userFormatFunctions.formatUserData(user);
+
+    const token = generateAuthToken(
+      { 
+        id: user.id,
+        name: user.name,
+        email: user.email
+      },
+      '3d'
+    );
+
+    return { user: formattedUserData , token };
   }
  
 }
