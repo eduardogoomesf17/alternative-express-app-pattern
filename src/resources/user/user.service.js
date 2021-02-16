@@ -3,7 +3,7 @@ const status = require('http-status');
 const InternalError = require('../../errors/');
 const eventEmitter = require('../../events');
 const { eventNames } = require('../../utils/constants');
-const { generatePasswordHash } = require('../../utils/password');
+const { generatePasswordHash, comparePassword } = require('../../utils/password');
 
 class UserService {
 
@@ -91,10 +91,28 @@ class UserService {
     const deleteResult = this.userRepository.deleteOne(userId);
 
     if(!deleteResult) {
-      throw new InternalError("Fail to delete user", status['500_MESSAGE']);
+      throw new InternalError("Fail to delete user", status.INTERNAL_SERVER_ERROR);
     }
 
     return deleteResult;
+  }
+
+  async authenticateUser({ email, password }) {
+    const invalidUserMessage = "Wrong e-mail or ";
+    
+    const user = this.userRepository.getOneByEmail(email);
+
+    if(!user) {
+      throw new InternalError(invalidUserMessage, status.BAD_REQUEST);
+    }
+
+    const isPasswordValid = await comparePassword(password, user.password);
+    
+    if(!isPasswordValid) {
+      throw new InternalError(invalidUserMessage, status.BAD_REQUEST);
+    }
+
+    return user;
   }
  
 }

@@ -3,6 +3,7 @@ const status = require('http-status');
 const UserService = require('./user.service');
 const UserRepository = require('./user.repository')
 const User = require('./user.model');
+const InternalError = require('../../errors');
 
 let userService = new UserService(UserRepository, User);
 
@@ -74,6 +75,18 @@ class UserController {
       userService.deleteUser(userId);
 
       return response.status(status.OK).json({ message: status['200_MESSAGE'] });
+    } catch (error) {
+      return next(error);
+    }
+  }
+
+  async authenticateUser(request, response, next) {
+    try {
+      const { email, password } = request.body;
+
+      const user = await userService.authenticateUser({  email, password });
+
+      return response.status(status.OK).json({ result: user, message: status['200_MESSAGE'] });
     } catch (error) {
       return next(error);
     }

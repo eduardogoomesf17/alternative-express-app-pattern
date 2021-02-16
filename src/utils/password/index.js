@@ -10,4 +10,14 @@ const generatePasswordHash = async (password) => {
   }
 };
 
-module.exports = { generatePasswordHash };
+const comparePassword = async (password, passwordHash) => {
+  try {
+    const isPasswordValid = await bcrypt.compare(password, passwordHash);
+
+    return isPasswordValid;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+module.exports = { generatePasswordHash, comparePassword };

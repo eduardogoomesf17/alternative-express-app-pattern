@@ -20,4 +20,6 @@ module.exports = (app) => {
   routes.patch('/:id', userController.updateUser);
 
   routes.delete('/:id', userController.deleteUser);
+
+  routes.post('/auth', userController.authenticateUser);
 }
