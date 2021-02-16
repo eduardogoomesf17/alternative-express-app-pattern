@@ -16,4 +16,8 @@ module.exports = (app) => {
   routes.get('/email/:email', userController.getUserByEmail);
 
   routes.post('/', userController.createUser);
+
+  routes.patch('/:id', userController.updateUser);
+
+  routes.delete('/:id', userController.deleteUser);
 }

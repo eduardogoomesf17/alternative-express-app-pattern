@@ -20,9 +20,9 @@ class UserController {
     }
   }
 
-  async getUsers(request, response, next) {
+  getUsers(request, response, next) {
     try {
-      const users = await userService.getUsers();
+      const users = userService.getUsers();
       
       return response.status(status.OK).json({ result: users, message: status['200_MESSAGE'] });
     } catch (error) { 
@@ -30,11 +30,11 @@ class UserController {
     }
   }
 
-  async getUserById(request, response, next) {
+  getUserById(request, response, next) {
     try {
       const userId = request.params.id;
 
-      const user = await userService.getUserById(userId);
+      const user = userService.getUserById(userId);
       
       return response.status(status.OK).json({ result: user, message: status['200_MESSAGE'] });
     } catch (error) {
@@ -42,13 +42,38 @@ class UserController {
     }
   }
 
-  async getUserByEmail(request, response, next) {
+  getUserByEmail(request, response, next) {
     try {
       const userEmail = request.params.email;
 
-      const user = await userService.getUserByEmail(userEmail);
+      const user = userService.getUserByEmail(userEmail);
       
       return response.status(status.OK).json({ result: user, message: status['200_MESSAGE'] });
+    } catch (error) {
+      return next(error);
+    }
+  }
+
+  async updateUser(request, response, next) {
+    try {
+      const userId = request.params.id;
+      const userData = request.body;
+
+      await userService.updateUser(userId, userData);
+
+      return response.status(status.OK).json({ message: status['200_MESSAGE'] });
+    } catch (error) {
+      return next(error);
+    }
+  }
+
+  deleteUser(request, response, next) {
+    try {
+      const userId = request.params.id;
+      
+      userService.deleteUser(userId);
+
+      return response.status(status.OK).json({ message: status['200_MESSAGE'] });
     } catch (error) {
       return next(error);
     }

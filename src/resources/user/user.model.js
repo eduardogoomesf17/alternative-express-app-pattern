@@ -38,7 +38,7 @@ class User {
 
   constructor() {}
 
-  async create (userBody) {
+  create (userBody) {
     try {
       const user = { 
         id: uuid(),       
@@ -56,7 +56,7 @@ class User {
     }
   }
 
-  async findByPk(primaryKeyValue) {
+  findByPk(primaryKeyValue) {
     try { 
       const user = users.find(user => user.id === primaryKeyValue);
 
@@ -66,7 +66,7 @@ class User {
     }
   }
 
-  async findAll() {
+  findAll() {
     try { 
       const userList = [ ...users ];
 
@@ -76,7 +76,7 @@ class User {
     }
   }
 
-  async findByEmail(email) {
+  findByEmail(email) {
     try {
       const user = users.find(user => user.email === email);
 
@@ -86,6 +86,47 @@ class User {
     }
   }
 
+
+  updateOne(userId, userData) {
+    try { 
+      validateModelProperties(this.properties, userData);
+
+      const findUserIndex = users.findIndex(user => user.id === userId);
+
+      if(findUserIndex === -1) {
+        throw new Error('User does not exist');
+      }
+
+      let user = users[findUserIndex];
+
+      user = {
+        ...user,
+        ...userData
+      }
+
+      users[findUserIndex] = user;
+
+      return "User successfully updated"
+    } catch (error) { 
+      throw new Error(error);
+    }
+  }
+
+  deleteOne(userId) {
+    try {
+      const findUserIndex = users.findIndex(user => user.id === userId);
+
+      if(findUserIndex === -1) {
+        throw new Error('User does not exist');
+      }
+
+      users.splice(findUserIndex, 1);
+
+      return "User successfully removed";
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
 
 }
 
