@@ -22,4 +22,7 @@ module.exports = {
 
   // Environment 
   app_environment: process.env.ENVIRONMENT || "DEVELOPMENT",
+
+  // Secret key for authorization token
+  token_secret_key: process.env.TOKEN_SECRET_KEY,
 }
