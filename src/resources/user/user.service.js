@@ -1,6 +1,6 @@
 const status = require('http-status');
 
-const InternalError = require('../../errors/');
+const { InternalError } = require('../../errors/');
 const eventEmitter = require('../../events');
 const { eventNames } = require('../../utils/constants');
 const { generatePasswordHash, comparePassword } = require('../../utils/password');

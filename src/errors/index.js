@@ -5,6 +5,6 @@ class InternalError {
     this.statusCode = statusCode;
   }
 
-} 
+}
 
-module.exports = InternalError;
+module.exports = { InternalError };
