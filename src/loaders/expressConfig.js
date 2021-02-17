@@ -40,21 +40,9 @@ const expressConfigLoader = (app) => {
 
   // Error Handler
   app.use((err, request, response, next) => {
-    if(err instanceof InternalError) {
-      Logger.error(err.errorMessage);
+    const formattedError = responseFormatFunctions.formatErrorDataForResponse(err);
 
-      return response
-      .status(err.statusCode)
-      .json({ 
-        result: err.errorMessage, 
-        message: status[`${err.statusCode}_MESSAGE`] 
-      });
-    }
-
-    Logger.error(err.message);
-    Logger.error(err.stack);
-
-    return response.status(status.INTERNAL_SERVER_ERROR).json({ message: status['500_MESSAGE'] });
+    return response.status(formattedError.statusCode).json({ ...formattedError.responseBody });
   });
 
 }
