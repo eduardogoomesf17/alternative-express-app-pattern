@@ -18,7 +18,7 @@ const generateAuthToken = (tokenPayload, expirationTime) => {
   }
 }
 
-const verifyToken = (token) => {
+const getAuthTokenPayload = (token) => {
   try {
     const tokenPayload = jwt.verify(token, config.token_secret_key);
 
@@ -28,4 +28,4 @@ const verifyToken = (token) => {
   }
 }
 
-module.exports = { generateAuthToken, verifyToken };
+module.exports = { generateAuthToken, getAuthTokenPayload };
