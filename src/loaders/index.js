@@ -7,4 +7,5 @@ module.exports = async (expressApp) => {
 
   await expressConfigLoader(expressApp);
   Logger.info('✌️ Express loaded');
+
 }

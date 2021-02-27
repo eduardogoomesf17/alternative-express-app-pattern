@@ -19,6 +19,8 @@ const formatErrorDataForResponse = (err) => {
       message: status[`${err.statusCode}_MESSAGE`] 
     }
 
+    console.log(formattedError.responseBody)
+
     return formattedError;
   }
 

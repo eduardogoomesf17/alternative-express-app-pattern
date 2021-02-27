@@ -4,12 +4,12 @@ const { InternalError } = require('../../../errors');
 const { getAuthTokenPayload } = require('../../../utils/authToken');
 const { responseFormatFunctions } = require('../../../utils/formatting');
 
-const attachCurrenctUser = async (request, response, next) => {
+const attachCurrentUser = async (request, response, next) => {
   try {
     const token = request.headers.authorization;
 
     if(!token) {
-      throw new InternalError("No token found", status.BAD_REQUEST);
+      throw new InternalError("Auth token is mandatory to perform this action", status.BAD_REQUEST);
     }
 
     const tokenPayload = getAuthTokenPayload(token);
@@ -17,8 +17,6 @@ const attachCurrenctUser = async (request, response, next) => {
     if(!tokenPayload) {
       throw new InternalError("Invalid token", status.BAD_REQUEST);
     }
-
-    console.log(tokenPayload);
 
     response.locals.user = { ...tokenPayload.user };
 
@@ -30,4 +28,4 @@ const attachCurrenctUser = async (request, response, next) => {
   }
 }
 
-module.exports = { attachCurrenctUser };
+module.exports = { attachCurrentUser };

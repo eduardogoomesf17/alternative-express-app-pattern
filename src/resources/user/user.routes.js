@@ -14,31 +14,31 @@ module.exports = (app) => {
 
   routes.patch(
     '/:id', 
-    authorizationMiddlewares.attachCurrenctUser,
+    authorizationMiddlewares.attachCurrentUser,
     userController.updateUser
   );
 
   routes.delete(
     '/:id', 
-    authorizationMiddlewares.attachCurrenctUser,
+    authorizationMiddlewares.attachCurrentUser,
     userController.deleteUser
   );
   
   routes.get(
     '/', 
-    authorizationMiddlewares.attachCurrenctUser,
+    authorizationMiddlewares.attachCurrentUser,
     userController.getUsers
   );
 
   routes.get(
     '/:id', 
-    authorizationMiddlewares.attachCurrenctUser,
+    authorizationMiddlewares.attachCurrentUser,
     userController.getUserById
   );
 
   routes.get(
     '/email/:email', 
-    authorizationMiddlewares.attachCurrenctUser,
+    authorizationMiddlewares.attachCurrentUser,
     userController.getUserByEmail
   );
 

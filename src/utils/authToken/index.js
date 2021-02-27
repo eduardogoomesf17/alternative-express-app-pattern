@@ -1,5 +1,7 @@
 const jwt = require('jsonwebtoken');
+const status = require('http-status');
 
+const { InternalError } = require('../../errors/index');
 const config = require('../../config');
 
 const generateAuthToken = (tokenPayload, expirationTime) => {
@@ -24,7 +26,7 @@ const getAuthTokenPayload = (token) => {
 
     return tokenPayload;
   } catch (error) {
-    throw new Error(error);
+    throw new InternalError("Token is either invalid or expired", status.BAD_REQUEST);
   }
 }
 

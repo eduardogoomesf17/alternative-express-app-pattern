@@ -2,10 +2,9 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const status = require('http-status');
 
-const Logger = require('./logger');
 const config = require('../config');
 const routes = require('../api');
-const { InternalError } = require('../errors');
+const responseFormatFunctions = require('../utils/formatting/error');
 
  /**
   * Load app config

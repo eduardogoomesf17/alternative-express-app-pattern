@@ -1,6 +1,17 @@
+const { EventEmitter } = require('events');
+
 const Logger = require('../../../loaders/logger');
 
-const sendUserSignUpMail = async ({ mail }) => {
+const userEventsName = {
+
+  user: {
+    signUp: "user-sign-up-mail"
+  }
+}
+
+const userEventEmitter = new EventEmitter();
+
+userEventEmitter.addListener(userEventsName.user.signUp, ({ mail }) => {
   try {
     Logger.info("Message sent successfully to " + mail);
 
@@ -8,8 +19,9 @@ const sendUserSignUpMail = async ({ mail }) => {
     Logger.error(error.message);
     Logger.error(error.stack);
   }
-};
+});
 
 module.exports = {
-  sendUserSignUpMail
+  userEventEmitter,
+  userEventsName
 };

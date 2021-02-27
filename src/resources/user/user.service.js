@@ -1,8 +1,7 @@
 const status = require('http-status');
 
 const { InternalError } = require('../../errors/');
-const eventEmitter = require('../../events');
-const { eventNames } = require('../../utils/constants');
+const userEvents = require('../..//events/mail/user');
 const { generatePasswordHash, comparePassword } = require('../../utils/password');
 const { generateAuthToken } = require('../../utils/authToken');
 const { userFormatFunctions } = require('../../utils/formatting/index');
@@ -28,7 +27,10 @@ class UserService {
       throw new InternalError("Fail to create user", status.INTERNAL_SERVER_ERROR);
     }
 
-    eventEmitter.emit(eventNames.mailEvents.user.signUp, { mail: userBody.email });
+    userEvents.userEventEmitter.emit(
+      userEvents.userEventsName.user.signUp, 
+      { mail: userBody.email }
+    );
 
     const formattedUserData = userFormatFunctions.formatUserData(user);
 
