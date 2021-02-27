@@ -11,4 +11,6 @@ const user = {
   createdAt: '2021-02-27'
 }
 
-module.exports = { createUser, user };
+const users = [ user, user ];
+
+module.exports = { createUser, user, users };
