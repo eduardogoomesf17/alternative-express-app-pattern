@@ -1,7 +1,7 @@
 class UserRepository {
 
   constructor(User) {
-    this.User = new User();
+    this.User = User;
   }
 
   create(userBody) {

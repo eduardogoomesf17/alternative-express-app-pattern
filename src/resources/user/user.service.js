@@ -8,8 +8,8 @@ const { userFormatFunctions } = require('../../utils/formatting/index');
 
 class UserService {
 
-  constructor(UserRepository, User) {
-    this.userRepository = new UserRepository(User);
+  constructor(UserRepository) {
+    this.userRepository = UserRepository;
   }
 
   async createUser(userBody) {

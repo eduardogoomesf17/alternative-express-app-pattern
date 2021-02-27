@@ -4,7 +4,8 @@ const UserService = require('./user.service');
 const UserRepository = require('./user.repository')
 const User = require('./user.model');
 
-let userService = new UserService(UserRepository, User);
+let userRepository = new UserRepository(User)
+let userService = new UserService(userRepository);
 
 class UserController {
 
