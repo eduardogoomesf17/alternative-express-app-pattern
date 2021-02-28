@@ -282,7 +282,50 @@ describe("User CRUD", () => {
 
     });
 
-    describe("#deleteOne", () => {});
+    describe("#deleteOne", () => {
+
+      it("should be able to delete an user", async () => {
+        const expectedResult = "succesfully deleted!";
+
+        userRepository.getOneById.mockReturnValue(UserMocks.user);
+        userRepository.deleteOne.mockReturnValue(expectedResult);
+
+
+        const result = await userService.deleteUser(UserMocks.user.id);
+
+        expect(userRepository.getOneById).toHaveBeenCalledWith(UserMocks.user.id);
+        expect(userRepository.deleteOne).toHaveBeenCalledWith(UserMocks.user.id);
+        expect(result).toBe(expectedResult);
+      });
+
+      it("should not be able to delete an user that does not exist", async () => {
+        userRepository.getOneById.mockReturnValue("");
+
+        try {
+          await userService.deleteUser(UserMocks.user.id);
+
+        } catch (error) {
+          expect(error).toBeInstanceOf(InternalError);
+          expect(error).toHaveProperty("errorMessage", "User not found");
+          expect(error).toHaveProperty("statusCode", status.NOT_FOUND);
+        }
+      });
+
+      it("should throw an exception if the user was not successfully deleted", async () => {
+        userRepository.getOneById.mockReturnValue(UserMocks.user);
+        userRepository.deleteOne.mockReturnValue("");
+
+        try {
+          await userService.deleteUser(UserMocks.user.id);
+
+        } catch (error) {
+          expect(error).toBeInstanceOf(InternalError);
+          expect(error).toHaveProperty("errorMessage", "Fail to delete user");
+          expect(error).toHaveProperty("statusCode", status.INTERNAL_SERVER_ERROR);
+        }
+
+      });
+    });
 
 
   })
