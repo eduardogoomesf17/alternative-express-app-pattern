@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1614482282467" clover="3.2.0">
-  <project timestamp="1614482282467" name="All files">
-    <metrics statements="85" coveredstatements="50" conditionals="24" coveredconditionals="20" methods="15" coveredmethods="7" elements="124" coveredelements="77" complexity="0" loc="85" ncloc="85" packages="1" files="2" classes="2"/>
+<coverage generated="1614483902844" clover="3.2.0">
+  <project timestamp="1614483902844" name="All files">
+    <metrics statements="85" coveredstatements="60" conditionals="24" coveredconditionals="24" methods="15" coveredmethods="8" elements="124" coveredelements="92" complexity="0" loc="85" ncloc="85" packages="1" files="2" classes="2"/>
     <file name="user.repository.js" path="/home/eg17/projects/express-folder-pattern/src/resources/user/user.repository.js">
       <metrics statements="26" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="7" coveredmethods="0"/>
       <line num="4" count="0" type="stmt"/>
@@ -32,14 +32,14 @@
       <line num="69" count="1" type="stmt"/>
     </file>
     <file name="user.service.js" path="/home/eg17/projects/express-folder-pattern/src/resources/user/user.service.js">
-      <metrics statements="59" coveredstatements="49" conditionals="24" coveredconditionals="20" methods="8" coveredmethods="7"/>
+      <metrics statements="59" coveredstatements="59" conditionals="24" coveredconditionals="24" methods="8" coveredmethods="8"/>
       <line num="1" count="1" type="stmt"/>
       <line num="3" count="1" type="stmt"/>
       <line num="4" count="1" type="stmt"/>
       <line num="6" count="1" type="stmt"/>
       <line num="7" count="1" type="stmt"/>
       <line num="8" count="1" type="stmt"/>
-      <line num="13" count="16" type="stmt"/>
+      <line num="13" count="19" type="stmt"/>
       <line num="17" count="3" type="stmt"/>
       <line num="19" count="3" type="cond" truecount="2" falsecount="0"/>
       <line num="20" count="1" type="stmt"/>
@@ -81,16 +81,16 @@
       <line num="106" count="2" type="cond" truecount="2" falsecount="0"/>
       <line num="107" count="1" type="stmt"/>
       <line num="110" count="1" type="stmt"/>
-      <line num="114" count="0" type="stmt"/>
-      <line num="116" count="0" type="stmt"/>
-      <line num="118" count="0" type="cond" truecount="0" falsecount="2"/>
-      <line num="119" count="0" type="stmt"/>
-      <line num="122" count="0" type="stmt"/>
-      <line num="124" count="0" type="cond" truecount="0" falsecount="2"/>
-      <line num="125" count="0" type="stmt"/>
-      <line num="128" count="0" type="stmt"/>
-      <line num="130" count="0" type="stmt"/>
-      <line num="139" count="0" type="stmt"/>
+      <line num="114" count="3" type="stmt"/>
+      <line num="116" count="3" type="stmt"/>
+      <line num="118" count="3" type="cond" truecount="2" falsecount="0"/>
+      <line num="119" count="1" type="stmt"/>
+      <line num="122" count="2" type="stmt"/>
+      <line num="124" count="2" type="cond" truecount="2" falsecount="0"/>
+      <line num="125" count="1" type="stmt"/>
+      <line num="128" count="1" type="stmt"/>
+      <line num="130" count="1" type="stmt"/>
+      <line num="139" count="1" type="stmt"/>
       <line num="144" count="1" type="stmt"/>
     </file>
   </project>

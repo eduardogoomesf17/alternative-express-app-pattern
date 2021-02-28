@@ -4,7 +4,7 @@ const { InternalError } = require('../../errors/');
 const userEvents = require('../..//events/mail/user');
 // const { generatePasswordHash, comparePassword } = require('../../utils/password');
 const passwords = require('../../utils/password');
-const { generateAuthToken } = require('../../utils/authToken');
+const tokens = require('../../utils/authToken');
 const { userFormatFunctions } = require('../../utils/formatting/index');
 
 class UserService {
@@ -127,7 +127,7 @@ class UserService {
 
     const formattedUserData = userFormatFunctions.formatUserData(user);
 
-    const token = generateAuthToken(
+    const token = tokens.generateAuthToken(
       { 
         id: user.id,
         name: user.name,

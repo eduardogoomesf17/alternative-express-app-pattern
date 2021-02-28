@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">83.05% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>49/59</span>
+                <span class='fraction'>59/59</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">83.33% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>20/24</span>
+                <span class='fraction'>24/24</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">87.5% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>7/8</span>
+                <span class='fraction'>8/8</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">83.05% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>49/59</span>
+                <span class='fraction'>59/59</span>
             </div>
         
             
@@ -212,7 +212,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-yes">19x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -313,32 +313,32 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -349,7 +349,7 @@ const { InternalError } = require('../../errors/');
 const userEvents = require('../..//events/mail/user');
 // const { generatePasswordHash, comparePassword } = require('../../utils/password');
 const passwords = require('../../utils/password');
-const { generateAuthToken } = require('../../utils/authToken');
+const tokens = require('../../utils/authToken');
 const { userFormatFunctions } = require('../../utils/formatting/index');
 &nbsp;
 class UserService {
@@ -455,24 +455,24 @@ class UserService {
     return deleteResult;
   }
 &nbsp;
-<span class="fstat-no" title="function not covered" >  as</span>ync authenticateUser({ email, password }) {
-    const invalidUserMessage = <span class="cstat-no" title="statement not covered" >"Invalid e-mail and/or password";</span>
+  async authenticateUser({ email, password }) {
+    const invalidUserMessage = "Invalid e-mail and/or password";
     
-    const user = <span class="cstat-no" title="statement not covered" >this.userRepository.getOneByEmail(email);</span>
+    const user = this.userRepository.getOneByEmail(email);
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    if(!user) {</span>
-<span class="cstat-no" title="statement not covered" >      throw new InternalError(invalidUserMessage, status.BAD_REQUEST);</span>
+    if(!user) {
+      throw new InternalError(invalidUserMessage, status.BAD_REQUEST);
     }
 &nbsp;
-    const isPasswordValid = <span class="cstat-no" title="statement not covered" >await passwords.comparePassword(password, user.password);</span>
+    const isPasswordValid = await passwords.comparePassword(password, user.password);
     
-<span class="cstat-no" title="statement not covered" >    if(!isPasswordValid) {</span>
-<span class="cstat-no" title="statement not covered" >      throw new InternalError(invalidUserMessage, status.BAD_REQUEST);</span>
+    if(!isPasswordValid) {
+      throw new InternalError(invalidUserMessage, status.BAD_REQUEST);
     }
 &nbsp;
-    const formattedUserData = <span class="cstat-no" title="statement not covered" >userFormatFunctions.formatUserData(user);</span>
+    const formattedUserData = userFormatFunctions.formatUserData(user);
 &nbsp;
-    const token = <span class="cstat-no" title="statement not covered" >generateAuthToken(</span>
+    const token = tokens.generateAuthToken(
       { 
         id: user.id,
         name: user.name,
@@ -481,7 +481,7 @@ class UserService {
       '3d'
     );
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    return { user: formattedUserData , token };</span>
+    return { user: formattedUserData , token };
   }
  
 }
@@ -493,7 +493,7 @@ module.exports = UserService;</pre></td></tr></table></pre>
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Sun Feb 28 2021 00:18:02 GMT-0300 (Brasilia Standard Time)
+                at Sun Feb 28 2021 00:45:02 GMT-0300 (Brasilia Standard Time)
             </div>
         </div>
         <script src="prettify.js"></script>

@@ -1,12 +1,14 @@
 const status = require('http-status');
 
 const passwords = require('../../utils/password/index');
+const tokens = require('../../utils/authToken');
 const responseFormatErrors = require('../../utils/formatting/error');
 const { userFormatFunctions } = require('../../utils/formatting/index');
 const { InternalError } = require("../../errors");
 const UserService = require('../../resources/user/user.service');
 const UserRepository = require('../../resources/user/user.repository');
 const UserMocks = require('../__mocks__/user.mock');
+const { format } = require('../../loaders/logger');
 
 // Dependency mocks
 const userRepository = {
@@ -39,6 +41,8 @@ describe("User CRUD", () => {
       userFormatFunctions.formatUserData = jest.fn();
       userFormatFunctions.formatUsersData = jest.fn();
       passwords.generatePasswordHash = jest.fn();
+      passwords.comparePassword = jest.fn();
+      tokens.generateAuthToken = jest.fn();
 
       userFormatFunctions.formatUserData.mockResolvedValue({ 
         id: UserMocks.user.id,
@@ -50,7 +54,6 @@ describe("User CRUD", () => {
 
     afterEach(() => {
       jest.resetAllMocks();
-      jest.clearAllMocks();
     });
 
     describe("#create", () => {
@@ -212,7 +215,7 @@ describe("User CRUD", () => {
 
     });
 
-    describe("#updateOne", () => {
+    describe("#updateUser", () => {
 
       it("should be able to update an user", async () => {
         userRepository.getOneById.mockReturnValue(UserMocks.user);
@@ -282,7 +285,7 @@ describe("User CRUD", () => {
 
     });
 
-    describe("#deleteOne", () => {
+    describe("#deleteUser", () => {
 
       it("should be able to delete an user", async () => {
         const expectedResult = "succesfully deleted!";
@@ -327,6 +330,75 @@ describe("User CRUD", () => {
       });
     });
 
+    describe("#authenticateUser", () => {
+
+      it("should be able to authenticate with the correct e-mail and password", async () => {
+        const token = "sdasdasdasdsadsa";
+
+        const formattedUser = {
+          id: UserMocks.user.id,
+          name: UserMocks.user.name,
+          email: UserMocks.user.email
+        }
+
+        const expectedResult = {
+          user: formattedUser,
+          token: token
+        }
+
+        userRepository.getOneByEmail.mockReturnValue(UserMocks.user);
+        passwords.comparePassword.mockReturnValue(true);
+        userFormatFunctions.formatUserData.mockReturnValue(formattedUser);
+        tokens.generateAuthToken.mockReturnValue(token);
+
+        const result = await userService.authenticateUser({ 
+          email: UserMocks.user.email, 
+          password: UserMocks.user.password
+        });
+
+        expect(userRepository.getOneByEmail).toHaveBeenCalledWith(UserMocks.user.email);
+        expect(passwords.comparePassword).toHaveBeenCalledWith(UserMocks.user.password, UserMocks.user.password);
+        expect(userFormatFunctions.formatUserData).toHaveBeenCalledWith(UserMocks.user);
+        expect(tokens.generateAuthToken).toHaveBeenCalledTimes(1);
+        expect(result).toStrictEqual(expectedResult);
+      });
+
+      it("should not be able to authenticate with the wrong e-mail", async () => {
+        userRepository.getOneByEmail.mockReturnValue("");
+
+        try {
+          await userService.authenticateUser({ 
+            email: UserMocks.user.email, 
+            password: UserMocks.user.password
+          });
+
+        } catch (error) {
+          expect(userRepository.getOneByEmail).toHaveBeenCalledWith(UserMocks.user.email);
+          expect(error).toBeInstanceOf(InternalError);
+          expect(error).toHaveProperty("errorMessage", "Invalid e-mail and/or password");
+          expect(error).toHaveProperty("statusCode", status.BAD_REQUEST);
+        }
+      });
+      
+      it("should not be able to authenticate with the wrong password", async () => {
+        userRepository.getOneByEmail.mockReturnValue(UserMocks.user);
+        passwords.comparePassword.mockReturnValue(false);
+
+        try {
+          await userService.authenticateUser({ 
+            email: UserMocks.user.email, 
+            password: UserMocks.user.password
+          });
+
+        } catch (error) {
+          expect(userRepository.getOneByEmail).toHaveBeenCalledWith(UserMocks.user.email);
+          expect(error).toBeInstanceOf(InternalError);
+          expect(error).toHaveProperty("errorMessage", "Invalid e-mail and/or password");
+          expect(error).toHaveProperty("statusCode", status.BAD_REQUEST);
+        }
+      });
+
+    });
 
   })
 });
