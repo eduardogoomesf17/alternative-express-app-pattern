@@ -137,6 +137,41 @@ describe("User CRUD", () => {
 
     });
 
+    describe("#getUserByEmail", () => {
+
+      it("should be able to get an user by e-mail", async () => {
+        const expectedResult = {
+          id: UserMocks.user.id,
+          name: UserMocks.user.name,
+          email: UserMocks.user.email
+        }
+
+        userRepository.getOneByEmail.mockReturnValue(UserMocks.user);
+
+        const result = await userService.getUserByEmail(UserMocks.user.email);
+
+        expect(userRepository.getOneByEmail).toHaveBeenCalledWith(UserMocks.user.email);
+        expect(result).toStrictEqual(expectedResult);
+        expect(result).toHaveProperty("id", UserMocks.user.id);
+        expect(result).toHaveProperty("email", UserMocks.user.email);
+      });
+
+      it("should not be able to get an user with the wrong e-mail", async () => {
+        userRepository.getOneByEmail.mockReturnValue('');
+
+        try {
+          await userService.getUserByEmail(UserMocks.user.email);
+
+        } catch (error) { 
+          expect(error).toBeInstanceOf(InternalError);
+          expect(error).toHaveProperty("errorMessage", "User not found");
+          expect(error).toHaveProperty("statusCode", status.NOT_FOUND);
+        }
+
+      });
+      
+    });
+
     describe("#getUsers", () => {
 
       it("should be able to get users", async () => {
@@ -171,7 +206,14 @@ describe("User CRUD", () => {
         }
       });
 
-    })
+    });
+
+    describe("#updateOne", () => {
+
+
+    });
+
+    describe("#deleteOne", () => {});
 
 
   })
