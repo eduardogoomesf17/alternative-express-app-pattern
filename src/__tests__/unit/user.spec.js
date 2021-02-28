@@ -1,18 +1,12 @@
 const status = require('http-status');
 
-let { generatePasswordHash } = require('../../utils/password');
+const passwords = require('../../utils/password/index');
 const responseFormatErrors = require('../../utils/formatting/error');
 const { userFormatFunctions } = require('../../utils/formatting/index');
 const { InternalError } = require("../../errors");
 const UserService = require('../../resources/user/user.service');
 const UserRepository = require('../../resources/user/user.repository');
 const UserMocks = require('../__mocks__/user.mock');
-
-// Utils functions mock
-generatePasswordHash = jest.fn();
-responseFormatErrors.formatErrorDataForResponse = jest.fn();
-userFormatFunctions.formatUserData = jest.fn();
-userFormatFunctions.formatUsersData = jest.fn();
 
 // Dependency mocks
 const userRepository = {
@@ -41,6 +35,11 @@ describe("User CRUD", () => {
     beforeEach(() => {
       userService = new UserService(userRepository);
 
+      responseFormatErrors.formatErrorDataForResponse = jest.fn();
+      userFormatFunctions.formatUserData = jest.fn();
+      userFormatFunctions.formatUsersData = jest.fn();
+      passwords.generatePasswordHash = jest.fn();
+
       userFormatFunctions.formatUserData.mockResolvedValue({ 
         id: UserMocks.user.id,
         name: UserMocks.user.name,
@@ -51,6 +50,7 @@ describe("User CRUD", () => {
 
     afterEach(() => {
       jest.resetAllMocks();
+      jest.clearAllMocks();
     });
 
     describe("#create", () => {
@@ -62,14 +62,17 @@ describe("User CRUD", () => {
           email: UserMocks.user.email
         };
 
+        userFormatFunctions.formatUserData.mockReturnValue(expectedResult);
         userRepository.getOneByEmail.mockReturnValue('');
-        generatePasswordHash.mockResolvedValue('asdsadsadsadsadsasadsa');
+        passwords.generatePasswordHash.mockResolvedValue('asdsadsadsadsadsasadsa');
         userRepository.create.mockReturnValue(UserMocks.user);
 
         const result = await userService.createUser(UserMocks.createUser);
 
+        expect(userFormatFunctions.formatUserData).toHaveBeenCalledWith(UserMocks.user);
         expect(userRepository.create).toHaveBeenCalledWith(UserMocks.createUser);
         expect(userRepository.getOneByEmail).toHaveBeenCalledWith(UserMocks.createUser.email);
+        expect(passwords.generatePasswordHash).toHaveBeenCalled();
         expect(result).toStrictEqual(expectedResult);
         expect(result).toHaveProperty('id', UserMocks.user.id);
       });
@@ -89,7 +92,7 @@ describe("User CRUD", () => {
 
       it("should catch an exception if the user was not successfully created", async () => {
         userRepository.getOneByEmail.mockReturnValue('');
-        generatePasswordHash.mockResolvedValue('asdsadsadsadsadsasadsa');
+        passwords.generatePasswordHash.mockResolvedValue('asdsadsadsadsadsasadsa');
         userRepository.create.mockReturnValue("");
 
         try {
@@ -188,6 +191,7 @@ describe("User CRUD", () => {
 
         const result = await userService.getUsers();
 
+        expect(userFormatFunctions.formatUsersData).toHaveBeenCalledWith(UserMocks.users);
         expect(userRepository.getAll).toHaveBeenCalledTimes(1);
         expect(userFormatFunctions.formatUsersData).toHaveBeenCalledWith(UserMocks.users);
         expect(result).toEqual(expect.arrayContaining(expectedResult));
@@ -210,6 +214,71 @@ describe("User CRUD", () => {
 
     describe("#updateOne", () => {
 
+      it("should be able to update an user", async () => {
+        userRepository.getOneById.mockReturnValue(UserMocks.user);
+        userRepository.updateOne.mockReturnValue(UserMocks.userUpdated);
+        
+        const result = await userService.updateUser(UserMocks.user.id, UserMocks.updateUser);
+
+        expect(result).toStrictEqual(UserMocks.userUpdated);
+        expect(result).toHaveProperty("name", UserMocks.userUpdated.name);
+        expect(userRepository.getOneById).toHaveBeenCalledWith(UserMocks.user.id);
+        expect(userRepository.updateOne).toHaveBeenCalledWith(UserMocks.user.id, UserMocks.updateUser);
+      });
+
+      it("should be able to update an user including its password", async () => {
+        const newPassword = 'ytrewq';
+
+        const userWithNewPassword = { ...UserMocks.updateUser, password: newPassword };        
+
+        const newPasswordHash = 'sahdudsaasdaassdsdashudas';
+
+        const beenCalledWith = {
+          ...UserMocks.updateUser,
+          password: newPasswordHash
+        }
+
+        userRepository.getOneById.mockReturnValue(UserMocks.user);
+        userRepository.updateOne.mockReturnValue(UserMocks.userUpdated);
+        passwords.generatePasswordHash.mockResolvedValue(newPasswordHash);
+        
+        const result = await userService.updateUser(UserMocks.user.id, userWithNewPassword);
+
+        expect(result).toStrictEqual(UserMocks.userUpdated);
+        expect(result).toHaveProperty("name", UserMocks.userUpdated.name);
+        expect(passwords.generatePasswordHash).toHaveBeenCalledWith(newPassword);
+        expect(userRepository.getOneById).toHaveBeenCalledWith(UserMocks.user.id);
+        expect(userRepository.updateOne).toHaveBeenCalledWith(UserMocks.user.id, beenCalledWith);
+
+      });
+
+      it("should not be able to update an user that does not exist", async () => {
+        userRepository.getOneById.mockReturnValue('');
+
+        try {
+          await userService.updateUser(UserMocks.user.id, UserMocks.updateUser);
+
+        } catch (error) {
+          expect(error).toBeInstanceOf(InternalError);
+          expect(error).toHaveProperty('errorMessage', "User not found");
+          expect(error).toHaveProperty("statusCode", status.NOT_FOUND);
+        }
+      });
+
+      it("should throw an exception if the user was not successfully updated", async () => {
+        userRepository.getOneById.mockReturnValue(UserMocks.user);
+        userRepository.updateOne.mockReturnValue('')
+        
+        try {
+          await userService.updateUser(UserMocks.user.id, UserMocks.updateUser);
+
+        } catch (error) {
+          expect(error).toBeInstanceOf(InternalError);
+          expect(error).toHaveProperty('errorMessage', "Fail to update user");
+          expect(error).toHaveProperty("statusCode", status.INTERNAL_SERVER_ERROR);
+        }
+        
+      });
 
     });
 

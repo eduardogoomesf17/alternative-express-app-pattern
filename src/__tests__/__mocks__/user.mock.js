@@ -11,6 +11,16 @@ const user = {
   createdAt: '2021-02-27'
 }
 
+const updateUser = {
+  name: "Updated user for test",
+  age: "Now I'm 21 yo!!"
+}
+
+const userUpdated = {
+  ...user,
+  ...updateUser
+}
+
 const users = [ user, user ];
 
-module.exports = { createUser, user, users };
+module.exports = { createUser, user, users, updateUser, userUpdated };

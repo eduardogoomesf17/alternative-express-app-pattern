@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">55.93% </span>
+                <span class="strong">71.19% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>33/59</span>
+                <span class='fraction'>42/59</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">41.67% </span>
+                <span class="strong">66.67% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>10/24</span>
+                <span class='fraction'>16/24</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">62.5% </span>
+                <span class="strong">75% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>5/8</span>
+                <span class='fraction'>6/8</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">55.93% </span>
+                <span class="strong">71.19% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>33/59</span>
+                <span class='fraction'>42/59</span>
             </div>
         
             
@@ -199,18 +199,20 @@
 <a name='L140'></a><a href='#L140'>140</a>
 <a name='L141'></a><a href='#L141'>141</a>
 <a name='L142'></a><a href='#L142'>142</a>
-<a name='L143'></a><a href='#L143'>143</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L143'></a><a href='#L143'>143</a>
+<a name='L144'></a><a href='#L144'>144</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">13x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -275,23 +277,23 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -345,7 +347,8 @@
 &nbsp;
 const { InternalError } = require('../../errors/');
 const userEvents = require('../..//events/mail/user');
-const { generatePasswordHash, comparePassword } = require('../../utils/password');
+// const { generatePasswordHash, comparePassword } = require('../../utils/password');
+const passwords = require('../../utils/password');
 const { generateAuthToken } = require('../../utils/authToken');
 const { userFormatFunctions } = require('../../utils/formatting/index');
 &nbsp;
@@ -362,7 +365,7 @@ class UserService {
       throw new InternalError("E-mail already in use", status.BAD_REQUEST);
     }
 &nbsp;
-    userBody.password = await generatePasswordHash(userBody.password);
+    userBody.password = await passwords.generatePasswordHash(userBody.password);
 &nbsp;
     const user = this.userRepository.create(userBody);
 &nbsp;
@@ -416,24 +419,24 @@ class UserService {
     return formattedUserData;
   }
 &nbsp;
-<span class="fstat-no" title="function not covered" >  as</span>ync updateUser(userId, userData) {
-    const user = <span class="cstat-no" title="statement not covered" >this.userRepository.getOneById(userId);</span>
+  async updateUser(userId, userData) {
+    const user = this.userRepository.getOneById(userId);
    
-<span class="cstat-no" title="statement not covered" >    if(!user) {</span>
-<span class="cstat-no" title="statement not covered" >      throw new InternalError("User not found", status.NOT_FOUND);</span>
+    if(!user) {
+      throw new InternalError("User not found", status.NOT_FOUND);
     }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    if(userData.password) {</span>
-<span class="cstat-no" title="statement not covered" >      userData.password = await generatePasswordHash(userData.password);</span>
+    if(userData.password) {
+      userData.password = await passwords.generatePasswordHash(userData.password);
     }
 &nbsp;
-    const updateResult = <span class="cstat-no" title="statement not covered" >this.userRepository.updateOne(userId, userData);</span>
+    const updateResult = this.userRepository.updateOne(userId, userData);
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    if(!updateResult) {</span>
-<span class="cstat-no" title="statement not covered" >      throw new InternalError("Fail to update user", status.INTERNAL_SERVER_ERROR);</span>
+    if(!updateResult) {
+      throw new InternalError("Fail to update user", status.INTERNAL_SERVER_ERROR);
     }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    return updateResult;</span>
+    return updateResult;
   }
 &nbsp;
 <span class="fstat-no" title="function not covered" >  de</span>leteUser(userId) {
@@ -453,7 +456,7 @@ class UserService {
   }
 &nbsp;
 <span class="fstat-no" title="function not covered" >  as</span>ync authenticateUser({ email, password }) {
-    const invalidUserMessage = <span class="cstat-no" title="statement not covered" >"Wrong e-mail or ";</span>
+    const invalidUserMessage = <span class="cstat-no" title="statement not covered" >"Invalid e-mail and/or password";</span>
     
     const user = <span class="cstat-no" title="statement not covered" >this.userRepository.getOneByEmail(email);</span>
 &nbsp;
@@ -461,7 +464,7 @@ class UserService {
 <span class="cstat-no" title="statement not covered" >      throw new InternalError(invalidUserMessage, status.BAD_REQUEST);</span>
     }
 &nbsp;
-    const isPasswordValid = <span class="cstat-no" title="statement not covered" >await comparePassword(password, user.password);</span>
+    const isPasswordValid = <span class="cstat-no" title="statement not covered" >await passwords.comparePassword(password, user.password);</span>
     
 <span class="cstat-no" title="statement not covered" >    if(!isPasswordValid) {</span>
 <span class="cstat-no" title="statement not covered" >      throw new InternalError(invalidUserMessage, status.BAD_REQUEST);</span>
@@ -490,7 +493,7 @@ module.exports = UserService;</pre></td></tr></table></pre>
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Sat Feb 27 2021 22:00:22 GMT-0300 (Brasilia Standard Time)
+                at Sat Feb 27 2021 23:35:25 GMT-0300 (Brasilia Standard Time)
             </div>
         </div>
         <script src="prettify.js"></script>

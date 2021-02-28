@@ -2,7 +2,8 @@ const status = require('http-status');
 
 const { InternalError } = require('../../errors/');
 const userEvents = require('../..//events/mail/user');
-const { generatePasswordHash, comparePassword } = require('../../utils/password');
+// const { generatePasswordHash, comparePassword } = require('../../utils/password');
+const passwords = require('../../utils/password');
 const { generateAuthToken } = require('../../utils/authToken');
 const { userFormatFunctions } = require('../../utils/formatting/index');
 
@@ -19,7 +20,7 @@ class UserService {
       throw new InternalError("E-mail already in use", status.BAD_REQUEST);
     }
 
-    userBody.password = await generatePasswordHash(userBody.password);
+    userBody.password = await passwords.generatePasswordHash(userBody.password);
 
     const user = this.userRepository.create(userBody);
 
@@ -81,7 +82,7 @@ class UserService {
     }
 
     if(userData.password) {
-      userData.password = await generatePasswordHash(userData.password);
+      userData.password = await passwords.generatePasswordHash(userData.password);
     }
 
     const updateResult = this.userRepository.updateOne(userId, userData);
@@ -110,7 +111,7 @@ class UserService {
   }
 
   async authenticateUser({ email, password }) {
-    const invalidUserMessage = "Wrong e-mail or ";
+    const invalidUserMessage = "Invalid e-mail and/or password";
     
     const user = this.userRepository.getOneByEmail(email);
 
@@ -118,7 +119,7 @@ class UserService {
       throw new InternalError(invalidUserMessage, status.BAD_REQUEST);
     }
 
-    const isPasswordValid = await comparePassword(password, user.password);
+    const isPasswordValid = await passwords.comparePassword(password, user.password);
     
     if(!isPasswordValid) {
       throw new InternalError(invalidUserMessage, status.BAD_REQUEST);
